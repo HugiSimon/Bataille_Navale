@@ -49,6 +49,15 @@ int main() {
 
 }
 
+
+/*****************
+
+CreatCase
+
+Creer une variable de type case
+
+*****************/
+
 Case creatCase(int n_l, int n_c) {
 
 	Case temp;
@@ -60,6 +69,15 @@ Case creatCase(int n_l, int n_c) {
 
 }
 
+
+/*****************
+
+detectCase
+
+Explore le tableau de case en recherche si la position cherché est déjà prise
+
+*****************/
+
 int detectCase(int n_l, int n_c, Case* tablo[TAILLE * TAILLE]) {
 
 	for (int n_i = 0; n_i < posiTab(tablo, 0); n_i++) {
@@ -70,6 +88,15 @@ int detectCase(int n_l, int n_c, Case* tablo[TAILLE * TAILLE]) {
 
 	return 0;
 }
+
+
+/*****************
+
+verifBoat
+
+Utilise detect case, permet de connaitre si un bateau est deja sur la position d'un futur bateau 
+
+*****************/
 
 int verifBoat(int n_l, int n_c, int n_rot, int n_cas, Case* tablo[TAILLE * TAILLE]) {
 
@@ -88,6 +115,15 @@ int verifBoat(int n_l, int n_c, int n_rot, int n_cas, Case* tablo[TAILLE * TAILL
 
 	return 0;
 }
+
+
+/*****************
+
+createBoat
+
+utilise verifBoat, puis apres utilise createCase sur ca permiere position jusqu'a la longeur du bateau
+
+*****************/
 
 Bateau createBoat(int n_cas, int n_rot, int n_l, int n_c, Case* tablo[TAILLE * TAILLE]) {
 	
@@ -117,6 +153,15 @@ Bateau createBoat(int n_cas, int n_rot, int n_l, int n_c, Case* tablo[TAILLE * T
 
 }
 
+
+/*****************
+
+posiTab
+
+return une position libre dans le tableau, si le bol est 1, il malloc une nouvelle position
+
+*****************/
+
 int posiTab(Case* tablo[TAILLE * TAILLE], int bol) {
 
 	int n_i = 0;
@@ -131,6 +176,15 @@ int posiTab(Case* tablo[TAILLE * TAILLE], int bol) {
 
 	return n_i;
 }
+
+
+/*****************
+
+affichBoat
+
+print un 1 si la case est prise, 0 si elle est vide
+
+*****************/
 
 void affichBoat(Case* tablo[TAILLE * TAILLE]) {
 
