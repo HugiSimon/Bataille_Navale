@@ -34,11 +34,13 @@ int detectCase(int, int, Case* tablo[TAILLE * TAILLE]);
 int verifBoat(int, int, int, int, Case* tablo[TAILLE * TAILLE]);
 Bateau createBoat(int, int, int, int, Case* tablo[TAILLE * TAILLE]);
 int posiTab(Case* tablo[TAILLE * TAILLE], int);
-void affichBoat(Case* tablo[TAILLE * TAILLE], int, Case* tablo2[TAILLE * TAILLE]);
+void affichBoat(Case* tablo[TAILLE * TAILLE], int, Case* tablo2[TAILLE * TAILLE], Case* tablo3[TAILLE * TAILLE]);
 Bateau createFlotte(int, Case* tablo[TAILLE * TAILLE]);
 void cleanTablo(Case* tablo[TAILLE * TAILLE]);
 void attackTablo(Case* tablo[TAILLE * TAILLE]);
-void affichAttak(Case* tablo[TAILLE * TAILLE], Case* tablo2[TAILLE * TAILLE], int, int);
+void affichAttak(Case* tablo[TAILLE * TAILLE], Case* tablo2[TAILLE * TAILLE], int, int, Case* tablo3[TAILLE * TAILLE]);
+void afficheVie(Flotte, Case* tablo[TAILLE * TAILLE]);
+int maxTab(Case* tablo[TAILLE * TAILLE]);
 
 int main() {
 
@@ -48,6 +50,8 @@ int main() {
 	Case* tablo2[TAILLE * TAILLE] = {};
 	tablo2[0] = nullptr;
 
+	Case* tablo3[TAILLE * TAILLE] = {};
+	tablo3[0] = nullptr;
 
 	Flotte equip1{};
 
@@ -55,32 +59,33 @@ int main() {
 
 		cleanTablo(tablo);
 		
-		affichBoat(tablo, 0, tablo2);
+		affichBoat(tablo, 0, tablo2, tablo3);
 		equip1.t_PA = (Bateau*)malloc(sizeof(Bateau));
 		*equip1.t_PA = createFlotte(5, tablo);
 
-		affichBoat(tablo, 0, tablo2);
+		affichBoat(tablo, 0, tablo2, tablo3);
 		equip1.t_Cr = (Bateau*)malloc(sizeof(Bateau));
 		*equip1.t_Cr = createFlotte(4, tablo);
 
-		affichBoat(tablo, 0, tablo2);
+		affichBoat(tablo, 0, tablo2, tablo3);
 		equip1.t_SM1 = (Bateau*)malloc(sizeof(Bateau));
 		*equip1.t_SM1 = createFlotte(3, tablo);
 
-		affichBoat(tablo, 0, tablo2);
+		affichBoat(tablo, 0, tablo2, tablo3);
 		equip1.t_SM2 = (Bateau*)malloc(sizeof(Bateau));
 		*equip1.t_SM2 = createFlotte(2, tablo);
 
-		affichBoat(tablo, 0, tablo2);
+		affichBoat(tablo, 0, tablo2, tablo3);
 		equip1.t_To = (Bateau*)malloc(sizeof(Bateau));
 		*equip1.t_To = createFlotte(1, tablo);
 
-		affichBoat(tablo, 0, tablo2);
+		affichBoat(tablo, 0, tablo2, tablo3);
 	}
 
-	while (posiTab(tablo, 0) != 0) {
+	while (/*posiTab(tablo, 0) != 0*/true) {
 
-		affichBoat(tablo, 1, tablo2);
+		affichBoat(tablo, 1, tablo2, tablo3);
+		afficheVie(equip1, tablo);
 		attackTablo(tablo2);
 
 	}
@@ -118,9 +123,11 @@ Explore le tableau de case en recherche si la position cherché est déjà prise
 
 int detectCase(int n_l, int n_c, Case* tablo[TAILLE * TAILLE]) {
 
-	for (int n_i = 0; n_i < posiTab(tablo, 0); n_i++) {
-		if (tablo[n_i]->n_ligne == n_l && tablo[n_i]->n_colonne == n_c) {
-			return n_i;
+	for (int n_i = 0; n_i < maxTab(tablo); n_i++) {
+		if (tablo[n_i] != nullptr) {
+			if (tablo[n_i]->n_ligne == n_l && tablo[n_i]->n_colonne == n_c) { //Passe par le n_i = 0 alors qu'il est vide, mais la suite n'est pas vide //peut etre faire une verif nullptr avant
+				return n_i;
+			}
 		}
 	}
 
@@ -225,7 +232,7 @@ print un 1 si la case est prise, 0 si elle est vide
 
 *****************/
 
-void affichBoat(Case* tablo[TAILLE * TAILLE], int bol, Case* tablo2[TAILLE * TAILLE]) {
+void affichBoat(Case* tablo[TAILLE * TAILLE], int bol, Case* tablo2[TAILLE * TAILLE], Case* tablo3[TAILLE * TAILLE]) {
 
 	system("cls");
 
@@ -240,7 +247,7 @@ void affichBoat(Case* tablo[TAILLE * TAILLE], int bol, Case* tablo2[TAILLE * TAI
 				}
 			}
 			else {
-				affichAttak(tablo, tablo2, n_i, n_j);
+				affichAttak(tablo, tablo2, n_i, n_j, tablo3);
 			}
 		}
 		printf_s("  %d", n_i+1);
@@ -374,34 +381,86 @@ Pour afficher directement ou on a tire et ou en a touche
 
 *****************/
 
-void affichAttak(Case* tablo[TAILLE * TAILLE], Case* tablo2[TAILLE * TAILLE], int n_l, int n_c) {
+void affichAttak(Case* tablo[TAILLE * TAILLE], Case* tablo2[TAILLE * TAILLE], int n_l, int n_c, Case* tablo3[TAILLE * TAILLE]) {
 
 	int temp = 0;
+	Case* tempo{};
+	Case* vide{};
 
 	for (int n_i = 0; n_i < posiTab(tablo2, 0); n_i++) {
 		if (detectCase(n_l, n_c, tablo2) != -1) {
 			if (detectCase(n_l, n_c, tablo) != -1) {
-				temp = 2;
+				tempo = (Case*)malloc(sizeof(Case));
+				tempo->n_ligne = n_l;
+				tempo->n_colonne = n_c;
+				tablo3[posiTab(tablo3, 1)] = tempo;
+				tablo[detectCase(n_l, n_c, tablo)] = vide;
 			}
 			else {
 				temp = 1;
 			}
 		}
 	}
-
-	switch (temp)
-	{
-	case 0:
-		printf_s("O ");
-		break;
-	case 1:
-		printf_s("0 ");
-		break;
-	case 2:
+	if (detectCase(n_l, n_c, tablo3) != -1) {
 		printf_s("X ");
-		break;
-	default:
-		break;
 	}
+	else {
+		switch (temp)
+		{
+		case 0:
+			printf_s("O ");
+			break;
+		case 1:
+			printf_s("0 ");
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+
+/*****************
+
+
+
+
+
+*****************/
+
+void afficheVie(Flotte equip, Case* tablo[TAILLE * TAILLE]) {
+
+	printf_s("\nPorte avion : ");
+	if (verifBoat(equip.t_PA->t_pos->n_ligne, equip.t_PA->t_pos->n_colonne, equip.t_PA->n_rota, equip.t_PA->n_case, tablo) == 1) {
+		printf_s("1");
+	}
+	else {
+		printf_s("0");
+	}
+
+}
+
+
+/*****************
+
+
+
+
+
+*****************/
+
+int maxTab(Case* tablo[TAILLE * TAILLE]) {
+
+	int n_j = 0;
+
+	for (int n_i = 0; n_i < TAILLE * TAILLE; n_i++) {
+
+		if (tablo[n_i] != nullptr) {
+			n_j = n_i;
+		}
+
+	}
+
+	return n_j;
 
 }
