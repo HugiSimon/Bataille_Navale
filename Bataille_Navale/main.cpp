@@ -37,6 +37,7 @@ int detectCase(Case* tablo[TAILLE * TAILLE], int, int);
 int detectBateau(Case* tablo[TAILLE * TAILLE], int, int, int, int);
 int emplacementVide(Case* tablo[TAILLE * TAILLE]);
 Case entreAttack();
+void affich(Case* tablo[TAILLE * TAILLE], Case* visee[TAILLE * TAILLE]);
 
 int main() {
 
@@ -63,9 +64,13 @@ int main() {
 
 
 	*visee[emplacementVide(visee)] = entreAttack();
+	affich(tablo, visee);
 	*visee[emplacementVide(visee)] = entreAttack();
+	affich(tablo, visee);
 	*visee[emplacementVide(visee)] = entreAttack();
+	affich(tablo, visee);
 	*visee[emplacementVide(visee)] = entreAttack();
+	affich(tablo, visee);
 
 	return 0;
 }
@@ -188,9 +193,43 @@ Case entreAttack() {
 	printf_s("Coordonnes Y : "); //Le y sont les lignes
 	scanf_s("%d", &n_y);
 
-	temp.n_colonne = n_x;
-	temp.n_ligne = n_y;
+	temp.n_colonne = n_x-1;
+	temp.n_ligne = n_y-1;
 
 	return temp;
+
+}
+
+void affich(Case* tablo[TAILLE * TAILLE], Case* visee[TAILLE * TAILLE]) {
+
+	for (int n_i = 0; n_i < TAILLE; n_i++) { //Pour les lignes
+
+		for (int n_j = 0; n_j < TAILLE; n_j++) { //Pour les colonnes
+
+			if (detectCase(visee, n_i, n_j) == 1) { //Si on a deja visee a ces coordonnes
+
+				if (detectCase(tablo, n_i, n_j) == 1) { //Si il y a aussi un bateau ici
+
+					printf_s("X ");
+
+				}
+				else { //Si il y a pas de bateau
+
+					printf_s("0 ");
+
+				}
+
+			}
+			else { //Si on a pas visee ici, c'est forcement ~
+
+				printf_s("~ ");
+
+			}
+
+		}
+
+		printf_s("\n");
+
+	}
 
 }
