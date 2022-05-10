@@ -29,24 +29,43 @@ typedef struct Flotte {
 
 };
 
+int main();
+
 Case createCase(int, int);
 Bateau createBateau(Case* tablo[TAILLE * TAILLE], int, int, int, int);
 int detectCase(Case* tablo[TAILLE * TAILLE], int, int);
 int detectBateau(Case* tablo[TAILLE * TAILLE], int, int, int, int);
 int emplacementVide(Case* tablo[TAILLE * TAILLE]);
+Case entreAttack();
 
 int main() {
 
-	Case *tablo[TAILLE * TAILLE] = {};
-	tablo[0] = (Case*)malloc(sizeof(Case));
-	*tablo[0] = createCase(2, 6);
+	Case* tablo[TAILLE * TAILLE] = {};
+	Case* visee[TAILLE * TAILLE] = {};
 
-	printf_s("%d", detectCase(tablo, 0, 0)); //Return 0
-	printf_s("%d\n", detectCase(tablo, 2, 6)); //Return 1
+	Flotte equip;
 
-	Bateau joliBateau = createBateau(tablo, 3, 5, 0, 4);
+	equip.t_PA = (Bateau*)malloc(sizeof(Bateau));
+	*equip.t_PA = createBateau(tablo, 2, 2, 0, 5);
 
-	printf_s("%d", tablo[0]->n_ligne);
+	equip.t_Cr = (Bateau*)malloc(sizeof(Bateau));
+	*equip.t_Cr = createBateau(tablo, 4, 5, 1, 4);
+
+	equip.t_SM1 = (Bateau*)malloc(sizeof(Bateau));
+	*equip.t_SM1 = createBateau(tablo, 6, 7, 0, 3);
+
+	equip.t_SM2 = (Bateau*)malloc(sizeof(Bateau));
+	*equip.t_SM2 = createBateau(tablo, 9, 2, 0, 3);
+
+	equip.t_To = (Bateau*)malloc(sizeof(Bateau));
+	*equip.t_To = createBateau(tablo, 1, 6, 1, 2);
+
+
+
+	*visee[emplacementVide(visee)] = entreAttack();
+	*visee[emplacementVide(visee)] = entreAttack();
+	*visee[emplacementVide(visee)] = entreAttack();
+	*visee[emplacementVide(visee)] = entreAttack();
 
 	return 0;
 }
@@ -77,7 +96,7 @@ Bateau createBateau(Case* tablo[TAILLE * TAILLE], int n_l, int n_c, int n_r, int
 	temp.n_rota = n_r; //Enregiste la rotation et la longeur
 	temp.n_case = n_n;
 
-	for (int n_i = 0; n_i < n_n ;n_i++) { //Repete le nombre de fois la taille du bateau
+	for (int n_i = 1; n_i < n_n ;n_i++) { //Repete le nombre de fois la taille du bateau
 
 		if (n_r == 0) { //En fonction de la rotation
 
@@ -154,5 +173,24 @@ int emplacementVide(Case* tablo[TAILLE * TAILLE]) {
 	tablo[n_i] = (Case*)malloc(sizeof(Case)); //On en profite pour faire un malloc
 
 	return n_i;
+
+}
+
+Case entreAttack() {
+
+	Case temp;
+	int n_x;
+	int n_y;
+
+	printf_s("Coordonnes X : "); //Le X sont les colonnes
+	scanf_s("%d", &n_x);
+
+	printf_s("Coordonnes Y : "); //Le y sont les lignes
+	scanf_s("%d", &n_y);
+
+	temp.n_colonne = n_x;
+	temp.n_ligne = n_y;
+
+	return temp;
 
 }
