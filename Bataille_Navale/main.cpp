@@ -33,6 +33,7 @@ int main();
 
 Case createCase(int, int);
 Bateau createBateau(Case* tablo[TAILLE * TAILLE], int, int, int, int);
+Flotte createFlotte(Case* tablo[TAILLE * TAILLE]);
 int detectCase(Case* tablo[TAILLE * TAILLE], int, int);
 int detectBateau(Case* tablo[TAILLE * TAILLE], int, int, int, int);
 int emplacementVide(Case* tablo[TAILLE * TAILLE]);
@@ -46,31 +47,7 @@ int main() {
 
 	Flotte equip;
 
-	equip.t_PA = (Bateau*)malloc(sizeof(Bateau));
-	*equip.t_PA = createBateau(tablo, 2, 2, 0, 5);
-
-	equip.t_Cr = (Bateau*)malloc(sizeof(Bateau));
-	*equip.t_Cr = createBateau(tablo, 4, 5, 1, 4);
-
-	equip.t_SM1 = (Bateau*)malloc(sizeof(Bateau));
-	*equip.t_SM1 = createBateau(tablo, 6, 7, 0, 3);
-
-	equip.t_SM2 = (Bateau*)malloc(sizeof(Bateau));
-	*equip.t_SM2 = createBateau(tablo, 9, 2, 0, 3);
-
-	equip.t_To = (Bateau*)malloc(sizeof(Bateau));
-	*equip.t_To = createBateau(tablo, 1, 6, 1, 2);
-
-
-
-	*visee[emplacementVide(visee)] = entreAttack();
-	affich(tablo, visee);
-	*visee[emplacementVide(visee)] = entreAttack();
-	affich(tablo, visee);
-	*visee[emplacementVide(visee)] = entreAttack();
-	affich(tablo, visee);
-	*visee[emplacementVide(visee)] = entreAttack();
-	affich(tablo, visee);
+	equip = createFlotte(tablo);
 
 	return 0;
 }
@@ -118,6 +95,115 @@ Bateau createBateau(Case* tablo[TAILLE * TAILLE], int n_l, int n_c, int n_r, int
 
 	return temp;
 
+}
+
+Flotte createFlotte(Case* tablo[TAILLE * TAILLE]) { //Demande toutes les positions des bateaux, vertical et horizontal
+
+	Flotte temp{};
+	int n_x;
+	int n_y;
+	int n_v;
+
+	Case* tabloVide[TAILLE * TAILLE]; //On creer un tableau de case remplie de vide
+	for (int n_i = 0; n_i < TAILLE * TAILLE; n_i++) {
+
+		if (tabloVide[n_i] != nullptr) {
+			tabloVide[n_i] = (Case*)malloc(sizeof(Case));
+			tabloVide[n_i]->n_ligne = 0;
+			tabloVide[n_i]->n_colonne = 0;
+
+		}
+
+	}
+
+	affich(tabloVide, tablo); //ca permet de faire un affichage propre
+
+	printf_s("Positionne le Porte Avoion (5 cases)\n"); //Créer un bateau pour le PA
+
+	printf_s("Colonne (X) : ");
+	scanf_s("%d", &n_x);
+
+	printf_s("Ligne (Y) : ");
+	scanf_s("%d", &n_y);
+
+	printf_s("Vertical (0) ou Horizontal (1) : ");
+	scanf_s("%d", &n_v);
+
+	temp.t_PA = (Bateau*)malloc(sizeof(Bateau));
+	*temp.t_PA = createBateau(tablo, n_y - 1, n_x - 1, n_v, 5);
+
+
+	affich(tabloVide, tablo);
+
+	printf_s("\nPositionne le Croiseur (4 cases)\n"); //Créer un bateau pour le Cr
+
+	printf_s("Colonne (X) : ");
+	scanf_s("%d", &n_x);
+
+	printf_s("Ligne (Y) : ");
+	scanf_s("%d", &n_y);
+
+	printf_s("Vertical (0) ou Horizontal (1) : ");
+	scanf_s("%d", &n_v);
+
+	temp.t_Cr = (Bateau*)malloc(sizeof(Bateau));
+	*temp.t_Cr = createBateau(tablo, n_y - 1, n_x - 1, n_v, 4);
+
+
+	affich(tabloVide, tablo);
+
+	printf_s("\nPositionne le 1er Sous Marin (3 cases)\n"); //Créer un bateau pour le SM1
+
+	printf_s("Colonne (X) : ");
+	scanf_s("%d", &n_x);
+
+	printf_s("Ligne (Y) : ");
+	scanf_s("%d", &n_y);
+
+	printf_s("Vertical (0) ou Horizontal (1) : ");
+	scanf_s("%d", &n_v);
+
+	temp.t_SM1 = (Bateau*)malloc(sizeof(Bateau));
+	*temp.t_SM1 = createBateau(tablo, n_y - 1, n_x - 1, n_v, 3);
+
+
+	affich(tabloVide, tablo);
+
+	printf_s("\nPositionne le 2eme Sous Marin (3 cases)\n"); //Créer un bateau pour le SM2
+
+	printf_s("Colonne (X) : ");
+	scanf_s("%d", &n_x);
+
+	printf_s("Ligne (Y) : ");
+	scanf_s("%d", &n_y);
+
+	printf_s("Vertical (0) ou Horizontal (1) : ");
+	scanf_s("%d", &n_v);
+
+	temp.t_SM2 = (Bateau*)malloc(sizeof(Bateau));
+	*temp.t_SM2 = createBateau(tablo, n_y - 1, n_x - 1, n_v, 3);
+
+
+	affich(tabloVide, tablo);;
+
+	printf_s("\nPositionne le Torpilleur (2 cases)\n"); //Créer un bateau pour le To
+
+	printf_s("Colonne (X) : ");
+	scanf_s("%d", &n_x);
+
+	printf_s("Ligne (Y) : ");
+	scanf_s("%d", &n_y);
+
+	printf_s("Vertical (0) ou Horizontal (1) : ");
+	scanf_s("%d", &n_v);
+
+	temp.t_To = (Bateau*)malloc(sizeof(Bateau));
+	*temp.t_To = createBateau(tablo, n_y - 1, n_x - 1, n_v, 2);
+
+
+	affich(tabloVide, tablo);
+
+	return temp;
 }
 
 int detectCase(Case* tablo[TAILLE * TAILLE], int n_l, int n_c) {
@@ -202,6 +288,8 @@ Case entreAttack() {
 
 void affich(Case* tablo[TAILLE * TAILLE], Case* visee[TAILLE * TAILLE]) {
 
+	system("cls"); //Pour clear l'ecran
+
 	for (int n_i = 0; n_i < TAILLE; n_i++) { //Pour les lignes
 
 		for (int n_j = 0; n_j < TAILLE; n_j++) { //Pour les colonnes
@@ -228,8 +316,23 @@ void affich(Case* tablo[TAILLE * TAILLE], Case* visee[TAILLE * TAILLE]) {
 
 		}
 
+		printf_s("  %d", n_i + 1); //Pour ecrire les numeros de lignes sur le cote
+		if (n_i == 0) {
+
+			printf(" ligne (Y)");
+
+		}
+
 		printf_s("\n");
 
 	}
+
+	printf_s("\n"); //Pour ecrire les numeros de colonnes sur le cote
+	for (int n_i = 1; n_i <= TAILLE; n_i++) {
+
+		printf_s("%d ", n_i);
+
+	}
+	printf_s("\ncolonne (X) \n\n");
 
 }
