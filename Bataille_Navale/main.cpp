@@ -29,13 +29,12 @@ typedef struct Flotte {
 
 };
 
-int main();
-
 Case createCase(int, int);
 Bateau createBateau(Case* tablo[TAILLE * TAILLE], int, int, int, int);
 Flotte createFlotte(Case* tablo[TAILLE * TAILLE]);
 int detectCase(Case* tablo[TAILLE * TAILLE], int, int);
 int detectBateau(Case* tablo[TAILLE * TAILLE], int, int, int, int);
+int detectFlotte(Case* tablo[TAILLE * TAILLE], Case* visee[TAILLE * TAILLE]);
 int emplacementVide(Case* tablo[TAILLE * TAILLE]);
 Case entreAttack();
 void affich(Case* tablo[TAILLE * TAILLE], Case* visee[TAILLE * TAILLE]);
@@ -48,6 +47,16 @@ int main() {
 	Flotte equip;
 
 	equip = createFlotte(tablo);
+
+	while (detectFlotte(tablo, visee) == 0) {
+
+		affich(tablo, visee);
+		*visee[emplacementVide(visee)] = entreAttack();
+
+	}
+
+	affich(tablo, visee);
+	printf_s("\n Yes we did it");
 
 	return 0;
 }
@@ -248,6 +257,36 @@ int detectBateau(Case* tablo[TAILLE * TAILLE], int n_l, int n_c, int n_r, int n_
 	}
 
 	return 0; //Si toutes les verification sont bonnes, ont renvoie 0
+
+}
+
+int detectFlotte(Case* tablo[TAILLE * TAILLE], Case* visee[TAILLE * TAILLE]) {
+
+	int n_j = 0;
+
+	for (int n_i = 0; n_i < TAILLE * TAILLE; n_i++) {
+
+		if (tablo[n_i] != nullptr) {
+
+			if (detectCase(visee, tablo[n_i]->n_ligne, tablo[n_i]->n_colonne) == 0) {
+
+				return 0;
+
+			}
+			else {
+
+				n_j++;
+
+			}
+
+		}
+	}
+
+	if (n_j == 16) {
+
+		return 1;
+
+	}
 
 }
 
